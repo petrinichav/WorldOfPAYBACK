@@ -48,6 +48,7 @@ struct TransactionsScreen: View {
                 Text("transactions.text.nodata")
                     .foregroundStyle(.green)
                     .padding()
+                    .accessibilityIdentifier("noData")
                 if !transactionClient.hasTransactions {
                     Button("button.load") {
                         Task {
@@ -56,6 +57,7 @@ struct TransactionsScreen: View {
                     }
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(.red)
+                    .accessibilityIdentifier("loadButton")
                 }
                 Spacer()
             }

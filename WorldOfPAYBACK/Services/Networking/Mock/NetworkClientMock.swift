@@ -15,7 +15,7 @@ struct NetworkClientMock: NetworkClientable {
     }
     
     func run<Response>(request: Request) async throws -> Response where Response : Decodable {
-        try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+        try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
         
         switch expectedResult {
         case .success:

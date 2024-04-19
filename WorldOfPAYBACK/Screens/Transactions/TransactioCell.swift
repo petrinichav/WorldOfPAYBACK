@@ -21,6 +21,7 @@ struct TransactioCell: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(.blue)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("transaction")
                 if let description = item.transactionDetail.description {
                     Spacer()
                     Text(description)

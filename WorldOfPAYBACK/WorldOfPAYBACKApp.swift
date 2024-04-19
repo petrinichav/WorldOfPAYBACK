@@ -13,17 +13,11 @@ struct WorldOfPAYBACKApp: App {
     @State private var errorWrapper: ErrorWrapper?
     
     var body: some Scene {
-        let transactionsClient = TransactionsClient(
-            networkingClient: NetworkClientMock(
-                expectedResult: .success(Void())
-            )
-        )
-        
         WindowGroup {
             NavigationStack(path: $routes) {
                 TransactionsScreen()
                     .environmentObject(
-                        transactionsClient
+                        Self.transactionsClient
                     )
                     .environment(\.showError) { error in
                         errorWrapper = ErrorWrapper(error: error)
@@ -33,17 +27,12 @@ struct WorldOfPAYBACKApp: App {
                             .fontWeight(.medium)
                             .foregroundStyle(.red)
                             .padding()
+                            .accessibilityIdentifier("error")
                     }
                     .navigationDestination(for: Route.self) { route in
                         switch route {
                         case .transactions:
                             Text("")
-                            
-                        case .filter:
-                            FilterView()
-                                .environmentObject(
-                                    transactionsClient
-                                )
                             
                         case .details(let item):
                             TransactionDetailsScreen(item: item)
@@ -67,5 +56,24 @@ struct WorldOfPAYBACKApp: App {
                 }
             }
         }
+    }
+}
+
+@MainActor
+private extension WorldOfPAYBACKApp {
+    static var transactionsClient: TransactionsClient {
+        let fail = ProcessInfo.processInfo.environment["fail"]
+        guard fail != nil else {
+            return TransactionsClient(
+                networkingClient: NetworkClientMock(
+                    expectedResult: .success(Void())
+                )
+            )
+        }
+        return TransactionsClient(
+            networkingClient: NetworkClientMock(
+                expectedResult: .failure(.someError)
+            )
+        )
     }
 }
